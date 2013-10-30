@@ -3,11 +3,12 @@ using System.Text;
 
 namespace EntityInitializer
 {
-	public class DateTimeType : TypeFactory
+	public class DateTimeGenerator : TextGenerator
 	{
-		public override string FactoryMethod(object propertyValue)
+		public override string Generate(object val)
 		{
-			long ticks = ((DateTime)propertyValue).Ticks;
+			long ticks = ((DateTime)val).Ticks;
+
 			StringBuilder builder = new StringBuilder();
 			builder.Append("new DateTime(")
 				.Append(ticks.ToString())

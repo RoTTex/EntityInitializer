@@ -9,20 +9,20 @@ namespace EntityInitializer
 {
 	public class EntityInitializer
 	{
-		Dictionary<Type, TypeFactory> types;
+		Dictionary<Type, TextGenerator> types;
 
 		public EntityInitializer()
 		{
-			types = new Dictionary<Type, TypeFactory>()
+			types = new Dictionary<Type, TextGenerator>()
 			{
-				{ typeof(string), new StringType() },
-				{ typeof(bool), new BoolType() },
-				{ typeof(DateTime), new DateTimeType() },
-				{ typeof(decimal), new DecimalType() },
-				{ typeof(double), new DoubleType() },
-				{ typeof(float), new FloatType() },
-				{ typeof(int), new IntType() },
-				{ typeof(long), new LongType() }
+				{ typeof(string), new StringGenerator() },
+				{ typeof(bool), new BoolGenerator() },
+				{ typeof(DateTime), new DateTimeGenerator() },
+				{ typeof(decimal), new DecimalGenerator() },
+				{ typeof(double), new DoubleGenerator() },
+				{ typeof(float), new FloatGenerator() },
+				{ typeof(int), new IntGenerator() },
+				{ typeof(long), new LongGenerator() }
 			};
 		}
 
@@ -61,51 +61,28 @@ namespace EntityInitializer
 				object propertyValue = p.GetValue(entity, null);
 				Type propeptyType = p.PropertyType;
 
-				builder.Append(types[propeptyType].FactoryMethod(propertyValue));
+//				builder.Append(types[propeptyType].FactoryMethod(propertyValue));
 
-				if(propertyValue == null)
+				if (propertyValue == null)
 				{
 					builder.Append("null");
 				}
-				else if(propeptyType == typeof(string))
-				{
-					builder.Append("\"")
-						.Append(propertyValue.ToString().Replace("\"", "\\\""))
-							.Append("\"");
-				}
-				else if(propeptyType == typeof(bool))
-				{
-					builder.Append(propertyValue.ToString().ToLower());
-				}
-				else if(propeptyType == typeof(decimal))
-				{
-					builder.Append(string.Format("{0}m", propertyValue));
-
-				}
-				else if(propeptyType == typeof(int)
-				        || propeptyType == typeof(float)
-				        || propeptyType == typeof(double)
-				        || propeptyType == typeof(long))
-				{
-					builder.Append(propertyValue.ToString());
-				}
-				else if(propeptyType == typeof(DateTime))
-				{
-					long ticks = ((DateTime)propertyValue).Ticks;
-					builder.Append("new DateTime(")
-						.Append(ticks.ToString())
-							.Append(")");
-				}
-				else if(propeptyType.GetInterfaces().Contains(typeof(IList)))
-				{
-					Type argType = propeptyType.GetGenericArguments()[0];
-					WriteInitializerForIList(argType, (IList)propertyValue, builder);
-				}
 				else
 				{
-					GetInitializerForSingleEntity(propeptyType, propertyValue, builder);
-
+					bool isTypeExist = types.Keys.Contains(propeptyType);
+					if (isTypeExist)
+						types[propeptyType].Generate(propertyValue);
+					else if(propeptyType.GetInterfaces().Contains(typeof(IList)))
+					{
+						Type argType = propeptyType.GetGenericArguments()[0];
+						WriteInitializerForIList(argType, (IList)propertyValue, builder);
+					}
+					else
+					{
+						GetInitializerForSingleEntity(propeptyType, propertyValue, builder);
+					}
 				}
+
 				builder.AppendLine(",");
 			}
 

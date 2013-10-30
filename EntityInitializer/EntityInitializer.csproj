@@ -32,13 +32,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EntityInitializer.cs" />
     <Compile Include="TypeFactory.cs" />
-    <Compile Include="ConcreteTypes\NullType.cs" />
     <Compile Include="ConcreteTypes\StringType.cs" />
     <Compile Include="ConcreteTypes\BoolType.cs" />
     <Compile Include="ConcreteTypes\DecimalType.cs" />
@@ -47,6 +47,7 @@
     <Compile Include="ConcreteTypes\FloatType.cs" />
     <Compile Include="ConcreteTypes\DoubleType.cs" />
     <Compile Include="ConcreteTypes\DateTimeType.cs" />
+    <Compile Include="TestClass.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

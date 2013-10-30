@@ -3,13 +3,13 @@ using System.Text;
 
 namespace EntityInitializer
 {
-	public class StringType : TypeFactory
+	public class StringGenerator : TextGenerator
 	{
-		public override string FactoryMethod(object propertyValue)
+		public override string Generate(object val)
 		{
 			StringBuilder builder = new StringBuilder();
 			builder.Append("\"")
-				.Append(propertyValue.ToString().Replace("\"", "\\\""))
+				.Append(val.ToString().Replace("\"", "\\\""))
 				.Append("\"");
 			return builder.ToString();
 		}
